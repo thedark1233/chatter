@@ -228,7 +228,7 @@
 			$('#new_discussion').slideUp();
 		});
 		$('#new_discussion_btn').click(function(){
-			@if(Auth::guest())
+			@if(!Sentinel::getUser())
 				window.location.href = "{{ route('login') }}";
 			@else
 				$('#new_discussion').slideDown();

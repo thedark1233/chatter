@@ -279,6 +279,7 @@ return [
     | no need to add 'auth' to these routes.
     |
     */
+    'authMiddleware' => 'connected',
 
     'middleware' => [
         'global'     => ['web'],

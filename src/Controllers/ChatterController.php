@@ -2,7 +2,7 @@
 
 namespace DevDojo\Chatter\Controllers;
 
-use Auth;
+use Sentinel;
 use DevDojo\Chatter\Helpers\ChatterHelper as Helper;
 use DevDojo\Chatter\Models\Models;
 use Illuminate\Routing\Controller as Controller;
@@ -44,14 +44,14 @@ class ChatterController extends Controller
     
     public function login()
     {
-        if (!Auth::check()) {
+        if (!Sentinel::check()) {
             return \Redirect::to('/'.config('chatter.routes.login').'?redirect='.config('chatter.routes.home'))->with('flash_message', 'Please create an account before posting.');
         }
     }
     
     public function register()
     {
-        if (!Auth::check()) {
+        if (!Sentinel::check()) {
             return \Redirect::to('/'.config('chatter.routes.register').'?redirect='.config('chatter.routes.home'))->with('flash_message', 'Please register for an account.');
         }
     }

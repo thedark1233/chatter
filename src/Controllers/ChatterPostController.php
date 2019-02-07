@@ -2,7 +2,7 @@
 
 namespace DevDojo\Chatter\Controllers;
 
-use Auth;
+use Sentinel;
 use Carbon\Carbon;
 use DevDojo\Chatter\Events\ChatterAfterNewResponse;
 use DevDojo\Chatter\Events\ChatterBeforeNewResponse;
@@ -79,7 +79,7 @@ class ChatterPostController extends Controller
             }
         }
 
-        $request->request->add(['user_id' => Auth::user()->id]);
+        $request->request->add(['user_id' => Sentinel::getUser()->id]);
 
         if (config('chatter.editor') == 'simplemde'):
             $request->request->add(['markdown' => 1]);
@@ -127,7 +127,7 @@ class ChatterPostController extends Controller
 
     private function notEnoughTimeBetweenPosts()
     {
-        $user = Auth::user();
+        $user = Sentinel::getUser();
 
         $past = Carbon::now()->subMinutes(config('chatter.security.time_between_posts'));
 
@@ -142,7 +142,7 @@ class ChatterPostController extends Controller
 
     private function sendEmailNotifications($discussion)
     {
-        $users = $discussion->users->except(Auth::user()->id);
+        $users = $discussion->users->except(Sentinel::getUser()->id);
         foreach ($users as $user) {
             Mail::to($user)->queue(new ChatterDiscussionUpdated($discussion));
         }
@@ -171,7 +171,7 @@ class ChatterPostController extends Controller
         }
 
         $post = Models::post()->find($id);
-        if (!Auth::guest() && (Auth::user()->id == $post->user_id)) {
+        if (Sentinel::check() && (Sentinel::getUser()->id == $post->user_id)) {
             if ($post->markdown) {
                 $post->body = $request->body;
             } else {
