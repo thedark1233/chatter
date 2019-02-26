@@ -26,8 +26,8 @@ class ChatterController extends Controller
         }
         
         $discussions = $discussions->paginate($pagination_results);
-        
-        $categories = Models::category()->get();
+
+        $categories = Models::category()->all();
         $categoriesMenu = Helper::categoriesMenu(array_filter($categories->toArray(), function ($item) {
             return $item['parent_id'] === null;
         }));
@@ -51,7 +51,7 @@ class ChatterController extends Controller
     
     public function register()
     {
-        if (!Sentinel::check()) {
+        if (!Sentinela::check()) {
             return \Redirect::to('/'.config('chatter.routes.register').'?redirect='.config('chatter.routes.home'))->with('flash_message', 'Please register for an account.');
         }
     }
