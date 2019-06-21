@@ -101,18 +101,22 @@ class ChatterHelper
      *
      * @return string
      */
-    public static function categoriesMenu($categories)
+    public static function categoriesMenu($categories ,  $inner = 0)
     {
-        $menu = '<ul class="nav nav-pills nav-stacked">';
+        $classes = ' nav-pills nav-stacked  accordion ' ;
+
+        $classes .= $inner ? 'inner' : '';
+        $menu = '<ul class="'.$classes.'">';
 
         foreach ($categories as $category) {
             $menu .= '<li>';
             $menu .= '<a href="/'.config('chatter.routes.home').'/'.config('chatter.routes.category').'/'.$category['slug'].'">';
             $menu .= '<div class="chatter-box" style="background-color:'.$category['color'].'"></div>';
             $menu .= $category['name'].'</a>';
+            $menu .= count($category['parents']) ? "<span class='toggle'>+</span>" : '';
 
             if (count($category['parents'])) {
-                $menu .= static::categoriesMenu($category['parents']);
+                $menu .= static::categoriesMenu($category['parents'],1);
             }
 
             $menu .= '</li>';
